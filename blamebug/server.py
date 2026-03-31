@@ -145,8 +145,7 @@ def create_app() -> FastAPI:
     ) as demo:
         gr.Markdown(
             "# BlameBug\n"
-            "Paste logs below and click **Analyze**. The report is shown as **plain text** "
-            "(readable in any theme). For styled HTML, open `GET /api/reports/{{id}}` in a browser."
+            "Paste logs below and click **Analyze**."
         )
         with gr.Row():
             logs_in = gr.Textbox(
