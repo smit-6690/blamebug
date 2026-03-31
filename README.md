@@ -20,12 +20,7 @@ pinned: false
 <br/><br/>
 
 ```
-██████╗ ██╗      █████╗ ███╗   ███╗███████╗██████╗ ██╗   ██╗ ██████╗
-██╔══██╗██║     ██╔══██╗████╗ ████║██╔════╝██╔══██╗██║   ██║██╔════╝
-██████╔╝██║     ███████║██╔████╔██║█████╗  ██████╔╝██║   ██║██║  ███╗
-██╔══██╗██║     ██╔══██║██║╚██╔╝██║██╔══╝  ██╔══██╗██║   ██║██║   ██║
-██████╔╝███████╗██║  ██║██║ ╚═╝ ██║███████╗██████╔╝╚██████╔╝╚██████╔╝
-╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═════╝  ╚═════╝  ╚═════╝
+FAULTLINE
 ```
 
 ### **Stop reading stack traces. Start shipping fixes.**
@@ -54,7 +49,6 @@ During incidents, teams burn **15-30 minutes** on the same repetitive triage loo
 
 ---
 
-<<<<<<< HEAD
 ## 📸 Screenshots
 
 > **Gradio Dashboard — Latest Incident Report**
@@ -85,8 +79,6 @@ During incidents, teams burn **15-30 minutes** on the same repetitive triage loo
 
 ---
 
-=======
->>>>>>> 7bf33b8 (Update workflow and documentation)
 ## 🏗️ Architecture
 
 ```text
@@ -401,7 +393,6 @@ Point your n8n HTTP node at:
 - n8n
 - Hugging Face Spaces (Docker)
 
-<<<<<<< HEAD
 | Layer | Technology |
 |:---:|:---:|
 | API Server | FastAPI |
@@ -421,6 +412,3 @@ Point your n8n HTTP node at:
 *If BlameBug saved your on-call night, drop a ⭐ — it means a lot.*
 
 </div>
-=======
----
->>>>>>> 7bf33b8 (Update workflow and documentation)
