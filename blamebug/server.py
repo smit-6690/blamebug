@@ -27,7 +27,10 @@ from blamebug.store import store
 
 
 def _expected_webhook_secret() -> Optional[str]:
-    s = os.environ.get("BLAMEBUG_WEBHOOK_SECRET", "").strip()
+    # Prefer renamed env var, keep old one for backward compatibility.
+    s = os.environ.get("FAULTLINE_WEBHOOK_SECRET", "").strip() or os.environ.get(
+        "BLAMEBUG_WEBHOOK_SECRET", ""
+    ).strip()
     return s or None
 
 
@@ -63,7 +66,7 @@ def _run_pipeline(
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="BlameBug", version="0.1.0")
+    app = FastAPI(title="FaultLine", version="0.1.0")
     api = APIRouter(prefix="/api")
 
     class WebhookResponse(BaseModel):
@@ -89,10 +92,12 @@ def create_app() -> FastAPI:
     @api.post("/webhook", response_model=WebhookResponse)
     def webhook(
         body: WebhookPayload,
+        x_faultline_secret: Optional[str] = Header(None, alias="X-FaultLine-Secret"),
         x_blamebug_secret: Optional[str] = Header(None, alias="X-BlameBug-Secret"),
     ) -> WebhookResponse:
         secret = _expected_webhook_secret()
-        if secret and x_blamebug_secret != secret:
+        provided_secret = x_faultline_secret or x_blamebug_secret
+        if secret and provided_secret != secret:
             raise HTTPException(status_code=401, detail="Invalid webhook secret")
         if not is_configured():
             raise HTTPException(
@@ -140,11 +145,11 @@ def create_app() -> FastAPI:
         return gradio_html_iframe(html_full), f"Showing latest: `{rid}`"
 
     with gr.Blocks(
-        title="BlameBug",
+        title="FaultLine",
         theme=gr.themes.Soft(primary_hue="slate", neutral_hue="gray"),
     ) as demo:
         gr.Markdown(
-            "# BlameBug\n"
+            "# FaultLine\n"
             "Paste logs below and click **Analyze**."
         )
         with gr.Row():

@@ -10,7 +10,7 @@ from openai import OpenAI
 
 from blamebug.models import IncidentAnalysis, Severity
 
-SYSTEM_PROMPT = """You are BlameBug, an SRE assistant. You receive raw backend logs, stack traces, or error snippets.
+SYSTEM_PROMPT = """You are FaultLine, an SRE assistant. You receive raw backend logs, stack traces, or error snippets.
 
 Rules:
 - Infer severity from symptoms: data loss/outage → critical; user-facing errors or failed payments → high; degraded performance or retries → medium; noisy logs or warnings → low; purely informational → info.
@@ -31,7 +31,7 @@ USER_SCHEMA_HINT = """Return a JSON object with exactly these keys:
 - confidence: number between 0 and 1"""
 
 GROQ_BASE_URL = "https://api.groq.com/openai/v1"
-# Default Groq chat model (fast, strong JSON following). Override with BLAMEBUG_LLM_MODEL.
+# Default Groq chat model (fast, strong JSON following). Override with FAULTLINE_LLM_MODEL.
 DEFAULT_GROQ_MODEL = "llama-3.3-70b-versatile"
 DEFAULT_OPENAI_MODEL = "gpt-4o-mini"
 
@@ -50,7 +50,9 @@ def _base_url() -> Optional[str]:
 
 
 def _default_model() -> str:
-    override = os.environ.get("BLAMEBUG_LLM_MODEL", "").strip()
+    override = os.environ.get("FAULTLINE_LLM_MODEL", "").strip() or os.environ.get(
+        "BLAMEBUG_LLM_MODEL", ""
+    ).strip()
     if override:
         return override
     if os.environ.get("GROQ_API_KEY", "").strip():
