@@ -1,96 +1,229 @@
+---
+title: BlameBug
+emoji: 🐞
+colorFrom: indigo
+colorTo: gray
+sdk: docker
+pinned: false
+---
 
-# BlameBug
+<div align="center">
 
-BlameBug is an incident-triage automation app that converts raw backend error logs into structured, actionable incident reports.
+<img src="https://img.shields.io/badge/python-3.10%2B-blue?style=flat-square&logo=python&logoColor=white" />
+<img src="https://img.shields.io/badge/FastAPI-0.111-009688?style=flat-square&logo=fastapi&logoColor=white" />
+<img src="https://img.shields.io/badge/Gradio-4.x-FF7C00?style=flat-square&logo=gradio&logoColor=white" />
+<img src="https://img.shields.io/badge/Groq-LLM-F55036?style=flat-square" />
 
-Instead of manually reading stack traces, assigning severity, and writing summary notes, BlameBug does this pipeline automatically:
+<br/><br/>
 
-1. Receive logs via webhook
-2. Analyze them with an LLM
-3. Classify severity and extract impact/root-cause hypothesis
-4. Produce immediate + long-term remediation actions
-5. Publish a report in Gradio and as standalone HTML
+```
+██████╗ ██╗      █████╗ ███╗   ███╗███████╗██████╗ ██╗   ██╗ ██████╗
+██╔══██╗██║     ██╔══██╗████╗ ████║██╔════╝██╔══██╗██║   ██║██╔════╝
+██████╔╝██║     ███████║██╔████╔██║█████╗  ██████╔╝██║   ██║██║  ███╗
+██╔══██╗██║     ██╔══██║██║╚██╔╝██║██╔══╝  ██╔══██╗██║   ██║██║   ██║
+██████╔╝███████╗██║  ██║██║ ╚═╝ ██║███████╗██████╔╝╚██████╔╝╚██████╔╝
+╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═════╝  ╚═════╝  ╚═════╝
+```
 
-Default provider is Groq (OpenAI-compatible API).
+### **Stop reading stack traces. Start shipping fixes.**
+
+*BlameBug turns raw backend error logs into structured, actionable incident reports — in seconds.*
+
+<br/>
+
+[🚀 Quick Start](#-quick-start) · [📡 API Reference](#-api-reference) · [🔧 n8n Integration](#-n8n-integration) · [☁️ Deploy to HF Spaces](#%EF%B8%8F-deploy-to-hugging-face-spaces) · [🐛 Troubleshooting](#-troubleshooting)
+
+</div>
 
 ---
 
-## What This Project Solves
+## 🔥 What Problem Does This Solve?
 
-During incidents, teams often spend 15-30 minutes on repetitive triage:
+During incidents, teams burn **15–30 minutes** on the same repetitive triage loop:
 
-- Parse noisy logs
-- Guess severity
-- Draft a concise summary
-- Write remediation steps
-
-BlameBug compresses that into a few seconds with consistent output formatting.
+| Manual Triage | With BlameBug |
+|:---|:---|
+| 😩 Parse noisy, multi-line logs by eye | ✅ LLM extracts signal automatically |
+| 😩 Guess severity based on gut feel | ✅ Consistent severity classification |
+| 😩 Draft a concise incident summary | ✅ Structured report generated instantly |
+| 😩 Brainstorm remediation steps | ✅ Immediate + long-term actions included |
+| ⏱️ ~20 minutes | ⚡ ~3 seconds |
 
 ---
 
-## Architecture
+## 📸 Screenshots
+
+> **Gradio Dashboard — Latest Incident Report**
+
+![BlameBug Gradio UI](./screenshots/gradio-ui.png)
+
+*The main Gradio interface at `/` shows the latest parsed incident with severity badge, root-cause hypothesis, and remediation steps.*
+
+<br/>
+
+> **Standalone HTML Report**
+
+![BlameBug HTML Report](./screenshots/html-report.png)
+
+*Each incident gets a fully styled, shareable HTML report accessible at `/api/reports/{report_id}`.*
+
+<br/>
+
+> **n8n Workflow — Log Forwarding Pipeline**
+
+![n8n Workflow](./screenshots/n8n-workflow.png)
+
+*Two-node n8n workflow: a webhook trigger that captures upstream alerts, forwarding them directly to BlameBug's ingest endpoint.*
+
+---
+
+## 🏗️ Architecture
+
+```
+Upstream Alert Source
+  (Slack / PagerDuty / logs / curl)
+              │
+              ▼
+        n8n Webhook
+              │
+              ▼
+    n8n HTTP Request Node
+  POST /api/webhook  ◄── BlameBug server (FastAPI)
+              │
+              ▼
+     LLM Structured Analysis
+       (Groq / OpenAI-compatible)
+              │
+              ▼
+   Store report in memory (report_id)
+              │
+       ┌──────┴──────────────┐
+       ▼                     ▼
+  Gradio UI (/)    HTML Report (/api/reports/{id})
+```
 
 ### Components
 
-- FastAPI API server (`blamebug/server.py`)
-- LLM analyzer (`blamebug/analyzer.py`)
-- HTML + text report builders (`blamebug/report_html.py`)
-- In-memory report store (`blamebug/store.py`)
-- Gradio interface mounted on FastAPI root (`/`)
-- n8n forwarding workflow (`n8n/blamebug-forward.json`)
+| File | Role |
+|:---|:---|
+| `blamebug/server.py` | FastAPI API server + Gradio mount |
+| `blamebug/analyzer.py` | LLM prompt + structured response parsing |
+| `blamebug/report_html.py` | HTML + plain-text report builders |
+| `blamebug/store.py` | In-memory report store (keyed by UUID) |
+| `n8n/blamebug-forward.json` | Importable n8n workflow |
 
-### High-level workflow
+---
 
-```text
-Upstream Alert Source
-   (Slack / PagerDuty / logs / manual test)
-                |
-                v
-          n8n Webhook
-                |
-                v
-      n8n HTTP Request Node
-   POST /api/webhook (BlameBug)
-                |
-                v
-        LLM Structured Analysis
-                |
-                v
-   Store report (memory, with report_id)
-                |
-        +-------+------------------+
-        |                          |
-        v                          v
-   Gradio UI (/)        HTML endpoint (/api/reports/{id})
+## 🚀 Quick Start
+
+### 1. Clone & install
+
+```bash
+git clone https://github.com/your-username/blamebug.git
+cd blamebug/blamebug
+
+python3 -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+
+pip install -e .
+```
+
+### 2. Configure environment
+
+```bash
+cp .env.example .env
+```
+
+Open `.env` and set your key:
+
+```env
+GROQ_API_KEY=gsk_xxxxxxxxxxxxxxxxxxxx
+```
+
+### 3. Run the server
+
+```bash
+uvicorn app:app --host 0.0.0.0 --port 7860
+```
+
+| Endpoint | URL |
+|:---|:---|
+| Gradio UI | http://127.0.0.1:7860 |
+| Health check | http://127.0.0.1:7860/health |
+
+### 4. Send your first log
+
+```bash
+curl -s -X POST http://localhost:7860/api/webhook \
+  -H "Content-Type: application/json" \
+  -d '{
+    "logs": "ERROR: SQLSTATE[HY000] [2002] Connection refused at db:5432",
+    "source": "prod-api",
+    "metadata": { "env": "production" }
+  }' | jq .
+```
+
+Expected response:
+
+```json
+{
+  "report_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "severity": "high",
+  "processing_seconds": 1.87,
+  "ok": true
+}
+```
+
+Then open: `http://localhost:7860/api/reports/<report_id>`
+
+---
+
+## ⚙️ Configuration
+
+| Variable | Required | Description |
+|:---|:---:|:---|
+| `GROQ_API_KEY` | ✅ Recommended | Primary LLM provider (fast + free tier) |
+| `OPENAI_API_KEY` | Optional | Fallback if Groq key not set |
+| `OPENAI_BASE_URL` | Optional | Override for any OpenAI-compatible endpoint |
+| `BLAMEBUG_LLM_MODEL` | Optional | Override default model name |
+| `BLAMEBUG_WEBHOOK_SECRET` | Optional | Require `X-BlameBug-Secret` header on ingest |
+
+> ⚠️ **Never commit real secrets.** Use `.env` locally (already in `.gitignore`) or platform-level secrets in production.
+
+---
+
+## 📡 API Reference
+
+### `GET /health`
+
+Returns server health and LLM configuration status.
+
+```json
+{
+  "status": "ok",
+  "llm_configured": true
+}
 ```
 
 ---
 
-## API Endpoints
+### `POST /api/webhook`
 
-### Health
+Ingest raw logs for analysis.
 
-- `GET /health`
-- Returns:
-  - `status`
-  - `llm_configured` (true if API key is configured)
-
-### Webhook Ingest
-
-- `POST /api/webhook`
-- JSON body:
+**Request body:**
 
 ```json
 {
-  "logs": "raw error text",
-  "source": "optional source name",
+  "logs": "raw error text or stack trace",
+  "source": "optional-source-label",
   "metadata": {
     "env": "prod"
   }
 }
 ```
 
-- Success response:
+**Success response:**
 
 ```json
 {
@@ -101,184 +234,148 @@ Upstream Alert Source
 }
 ```
 
-### Report View
-
-- `GET /api/reports/{report_id}`
-- Returns full styled HTML report.
-
----
-
-## Local Run
-
-```bash
-cd blamebug
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e .
-cp .env.example .env
-# edit .env and set GROQ_API_KEY
-uvicorn app:app --host 0.0.0.0 --port 7860
+**Optional header** (if `BLAMEBUG_WEBHOOK_SECRET` is set):
+```
+X-BlameBug-Secret: your-secret
 ```
 
-Open:
+---
 
-- UI: [http://127.0.0.1:7860](http://127.0.0.1:7860)
-- Health: [http://127.0.0.1:7860/health](http://127.0.0.1:7860/health)
+### `GET /api/reports/{report_id}`
+
+Returns a full, standalone styled HTML incident report.
 
 ---
 
-## Configuration
+## 🔧 n8n Integration
 
-| Variable | Required | Purpose |
-|---|---:|---|
-| `GROQ_API_KEY` | Yes (recommended) | Primary LLM key (Groq endpoint auto-selected) |
-| `OPENAI_API_KEY` | Optional | Use OpenAI/compatible provider when Groq key not set |
-| `OPENAI_BASE_URL` | Optional | Override API base URL for OpenAI-compatible providers |
-| `BLAMEBUG_LLM_MODEL` | Optional | Override default model |
-| `BLAMEBUG_WEBHOOK_SECRET` | Optional | If set, requires `X-BlameBug-Secret` header on `/api/webhook` |
+BlameBug ships with a ready-to-import n8n workflow for routing upstream alerts.
 
-> Important: Never commit real secrets. Keep real keys in `.env` (ignored by `.gitignore`) or platform secrets.
+### Step-by-step setup
 
----
+**1. Import the workflow**
 
-## n8n Setup (Step-by-step)
-
-### 1) Import workflow
-
-In n8n:
-
-- Workflows -> Import from file
-- Select: `n8n/blamebug-forward.json`
+In n8n: **Workflows → Import from file → select `n8n/blamebug-forward.json`**
 
 This creates two nodes:
+- `Incoming logs` — Webhook trigger
+- `Forward to BlameBug` — HTTP Request
 
-- `Incoming logs` (Webhook trigger)
-- `Forward to BlameBug` (HTTP Request)
+**2. Set the BlameBug target URL**
 
-### 2) Set BlameBug target URL
+In the `Forward to BlameBug` node, set the URL to your BlameBug server:
 
-Open `Forward to BlameBug` node and set:
+| Environment | URL |
+|:---|:---|
+| Local (same machine) | `http://localhost:7860/api/webhook` |
+| Hugging Face Space | `https://<space>.hf.space/api/webhook` |
 
-- URL: `https://<your-host>/api/webhook`
+**3. Configure headers**
 
-Examples:
+Always include:
+```
+Content-Type: application/json
+```
 
-- Local (same machine): `http://localhost:7860/api/webhook`
-- Hugging Face Space: `https://<space>.hf.space/api/webhook`
+If using webhook secret:
+```
+X-BlameBug-Secret: <your-secret>
+```
 
-### 3) Headers
+**4. Activate & test**
 
-Always send:
-
-- `Content-Type: application/json`
-
-If `BLAMEBUG_WEBHOOK_SECRET` is enabled in BlameBug, also add:
-
-- `X-BlameBug-Secret: <your-secret>`
-
-### 4) Activate workflow
-
-- Click Publish / Activate in n8n
-
-### 5) Trigger test event
-
-Use the `Incoming logs` webhook URL and send:
+Click **Publish / Activate**, then trigger a test event:
 
 ```bash
 curl -s -X POST "<N8N_WEBHOOK_URL>" \
   -H "Content-Type: application/json" \
-  -d '{"logs":"ERROR: db connection refused","source":"n8n-test","metadata":{"env":"prod"}}'
+  -d '{
+    "logs": "ERROR: db connection refused",
+    "source": "n8n-test",
+    "metadata": { "env": "prod" }
+  }'
 ```
 
-### 6) Verify execution
+**5. Verify in n8n Executions**
 
-In n8n Executions:
-
-- `Incoming logs` should be successful
-- `Forward to BlameBug` should return HTTP 200 and include `report_id`
-
-Then open:
-
-- `https://<your-host>/api/reports/<report_id>`
+- `Incoming logs` → ✅ Successful
+- `Forward to BlameBug` → ✅ HTTP 200 with `report_id`
 
 ---
 
-## Hugging Face Spaces Deployment (Docker)
+## ☁️ Deploy to Hugging Face Spaces
 
-### 1) Create Space
+### 1. Create a new Space
 
-- Create new Space
-- SDK: Docker
-- Visibility: Public/Private as needed
+- SDK: **Docker**
+- Visibility: Public or Private
 
-### 2) Push code to Space repo
+### 2. Push code to your Space repo
 
-If you already have your code in GitHub, you can either connect repo from HF UI or push directly to HF Space git remote.
+Either connect your GitHub repo from the HF UI, or push directly:
 
-### 3) Add secrets in Space Settings
+```bash
+git remote add space https://huggingface.co/spaces/<your-username>/<space-name>
+git push space main
+```
 
-- `GROQ_API_KEY`
-- optional `BLAMEBUG_WEBHOOK_SECRET`
+### 3. Add secrets in Space Settings
 
-### 4) Build + run
+| Secret | Value |
+|:---|:---|
+| `GROQ_API_KEY` | Your Groq API key |
+| `BLAMEBUG_WEBHOOK_SECRET` | *(Optional)* Ingest protection secret |
 
-- Wait for Space status -> Running
-- Test:
-  - `https://<space>.hf.space/health`
-  - should return `llm_configured: true`
+### 4. Verify deployment
 
-### 5) Connect n8n
+Once status shows **Running**:
 
-Use this URL in n8n HTTP node:
+```
+https://<space>.hf.space/health
+```
 
-- `https://<space>.hf.space/api/webhook`
+Should return: `"llm_configured": true`
 
----
+### 5. Connect n8n
 
-## Report Behavior
-
-- Main app (`/`) shows the latest report via Gradio
-- API endpoint (`/api/reports/{id}`) returns standalone colorful HTML
-- Reports are stored **in-memory** (not persisted): restarts clear history
-
----
-
-## Troubleshooting
-
-### 503 on `/api/webhook`
-
-Cause: missing LLM key  
-Fix: set `GROQ_API_KEY` or `OPENAI_API_KEY`
-
-### 401 on `/api/webhook`
-
-Cause: secret header mismatch  
-Fix: set matching `X-BlameBug-Secret` in client/n8n
-
-### n8n HTTP node says no input
-
-Cause: webhook trigger node not executed first  
-Fix: execute workflow and send payload to `Incoming logs` webhook URL
-
-### HF Space shows README config error
-
-Cause: missing/invalid YAML front-matter in README  
-Fix: keep valid front-matter block at top (already included in this file)
+Point your n8n HTTP node at:
+```
+https://<space>.hf.space/api/webhook
+```
 
 ---
 
-## Tech Stack
+## 🐛 Troubleshooting
 
-- Python
-- FastAPI
-- Gradio
-- Pydantic
-- Groq / OpenAI-compatible APIs
-- n8n
-- Hugging Face Spaces (Docker)
+| Symptom | Cause | Fix |
+|:---|:---|:---|
+| `503` on `/api/webhook` | Missing LLM API key | Set `GROQ_API_KEY` or `OPENAI_API_KEY` in `.env` |
+| `401` on `/api/webhook` | Secret header mismatch | Ensure `X-BlameBug-Secret` matches `BLAMEBUG_WEBHOOK_SECRET` |
+| n8n says "no input data" | Webhook trigger not hit first | Execute the workflow, then send payload to `Incoming logs` URL |
+| HF Space shows README config error | Invalid YAML front-matter | Keep the valid front-matter block at the top of `README.md` |
 
 ---
 
-## License
+## 🛠️ Tech Stack
 
-MIT
+<div align="center">
+
+| Layer | Technology |
+|:---:|:---:|
+| API Server | FastAPI |
+| UI | Gradio |
+| LLM | Groq (OpenAI-compatible) |
+| Validation | Pydantic |
+| Automation | n8n |
+| Hosting | Hugging Face Spaces (Docker) |
+
+</div>
+
+
+<div align="center">
+
+**Built to end the log-reading dark age.**
+
+*If BlameBug saved your on-call night, drop a ⭐ — it means a lot.*
+
+</div>
