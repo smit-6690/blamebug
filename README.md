@@ -1,3 +1,11 @@
+---
+title: BlameBug
+emoji: 🐞
+colorFrom: indigo
+colorTo: slate
+sdk: docker
+pinned: false
+---
 # BlameBug
 
 Automated incident triage: raw error logs arrive on a **webhook**, an **n8n** workflow can route them, an **LLM** classifies severity and proposes remediation, and a **Gradio** UI shows a **plain-text report** (readable in any theme). **Styled HTML** is available at `GET /api/reports/{id}` when you open it in a browser—typically well under a minute for typical log sizes.
