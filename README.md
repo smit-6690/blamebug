@@ -14,8 +14,8 @@ pinned: false
 <img src="https://img.shields.io/badge/Gradio-4.x-FF7C00?style=flat-square&logo=gradio&logoColor=white" />
 <img src="https://img.shields.io/badge/Groq-LLM-F55036?style=flat-square" />
 <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" />
-<img src="https://img.shields.io/github/stars/smit-6690/blamebug?style=flat-square&logo=github" />
-<img src="https://img.shields.io/github/last-commit/smit-6690/blamebug?style=flat-square" />
+<img src="https://img.shields.io/github/stars/smit-6690/faultline?style=flat-square&logo=github" />
+<img src="https://img.shields.io/github/last-commit/smit-6690/faultline?style=flat-square" />
 
 <br/><br/>
 
@@ -85,11 +85,11 @@ Upstream Alert Source
 
 | File | Role |
 |:---|:---|
-| `blamebug/server.py` | FastAPI API server + Gradio mount |
-| `blamebug/analyzer.py` | LLM prompt + structured response parsing |
-| `blamebug/report_html.py` | HTML + plain-text report builders |
-| `blamebug/store.py` | In-memory report store (keyed by UUID) |
-| `n8n/blamebug-forward.json` | Importable n8n workflow |
+| `faultline/server.py` | FastAPI API server + Gradio mount |
+| `faultline/analyzer.py` | LLM prompt + structured response parsing |
+| `faultline/report_html.py` | HTML + plain-text report builders |
+| `faultline/store.py` | In-memory report store (keyed by UUID) |
+| `n8n/faultline-forward.json` | Importable n8n workflow |
 
 ---
 
@@ -98,8 +98,8 @@ Upstream Alert Source
 ### 1. Clone & install
 
 ```bash
-git clone https://github.com/smit-6690/blamebug.git
-cd blamebug
+git clone https://github.com/smit-6690/faultline.git
+cd faultline
 
 python3 -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
@@ -263,7 +263,7 @@ FaultLine ships with a ready-to-import n8n workflow for routing upstream alerts.
 
 **1. Import the workflow**
 
-In n8n: **Workflows -> Import from file -> select `n8n/blamebug-forward.json`**
+In n8n: **Workflows -> Import from file -> select `n8n/faultline-forward.json`**
 
 This creates two nodes:
 
@@ -322,7 +322,7 @@ curl -s -X POST "<N8N_WEBHOOK_URL>" \
 Either connect your GitHub repo from the HF UI, or push directly:
 
 ```bash
-git remote add hf https://huggingface.co/spaces/smit1618/blamebug-demo
+git remote add hf https://huggingface.co/spaces/smit1618/faultline-demo
 git push hf main
 ```
 
@@ -387,6 +387,6 @@ Point your n8n HTTP node at:
 
 **Built to end the log-reading dark age.**
 
-*If BlameBug saved your on-call night, drop a ⭐ — it means a lot.*
+*If Faultline saved your on-call night, drop a ⭐ — it means a lot.*
 
 </div>
