@@ -178,7 +178,7 @@ Then open: `http://localhost:7860/api/reports/<report_id>`
 
 > **Gradio Dashboard — Latest Incident Report**
 
-![FaultLine Gradio UI](https://raw.githubusercontent.com/smit-6690/blamebug/main/1.png)
+<img width="1468" height="692" alt="image" src="https://github.com/user-attachments/assets/27669525-3616-4075-b9d8-3130081d0164" />
 
 *The main Gradio interface at `/` shows the latest parsed incident with severity badge, root-cause hypothesis, and remediation steps.*
 
@@ -186,7 +186,9 @@ Then open: `http://localhost:7860/api/reports/<report_id>`
 
 > **Standalone HTML Report**
 
-![FaultLine HTML Report](https://raw.githubusercontent.com/smit-6690/blamebug/main/2.png)
+<img width="1468" height="766" alt="image" src="https://github.com/user-attachments/assets/8685f24e-dd01-4b87-9f43-0580f8637271" />
+<img width="1468" height="789" alt="image" src="https://github.com/user-attachments/assets/bd01f6ff-5068-4aff-96be-2048028424f3" />
+
 
 *Each incident gets a fully styled, shareable HTML report accessible at `/api/reports/{report_id}`.*
 
@@ -194,7 +196,7 @@ Then open: `http://localhost:7860/api/reports/<report_id>`
 
 > **n8n Workflow — Log Forwarding Pipeline**
 
-![n8n Workflow](https://raw.githubusercontent.com/smit-6690/blamebug/main/4.png)
+<img width="1468" height="824" alt="image" src="https://github.com/user-attachments/assets/d338c6eb-cc10-4abb-8a3d-feb25afe9f60" />
 
 *Two-node n8n workflow: a webhook trigger that captures upstream alerts, forwarding them directly to FaultLine's ingest endpoint.*
 
