@@ -55,7 +55,8 @@ During incidents, teams burn **15–30 minutes** on the same repetitive triage l
 
 > **Gradio Dashboard — Latest Incident Report**
 
-![BlameBug Gradio UI](./screenshots/gradio-ui.png)
+<img width="1468" height="699" alt="image" src="https://github.com/user-attachments/assets/07cf5ac2-89c3-40ee-b0b4-0dc3c34f8b0b" />
+
 
 *The main Gradio interface at `/` shows the latest parsed incident with severity badge, root-cause hypothesis, and remediation steps.*
 
@@ -63,7 +64,10 @@ During incidents, teams burn **15–30 minutes** on the same repetitive triage l
 
 > **Standalone HTML Report**
 
-![BlameBug HTML Report](./screenshots/html-report.png)
+<img width="2936" height="1598" alt="image" src="https://github.com/user-attachments/assets/15a5e92c-427a-47cb-a333-1ae617e1e9b1" />
+
+<img width="1468" height="799" alt="image" src="https://github.com/user-attachments/assets/740b7ef1-193f-4ff1-915b-cfe3732d9a03" />
+
 
 *Each incident gets a fully styled, shareable HTML report accessible at `/api/reports/{report_id}`.*
 
@@ -71,7 +75,7 @@ During incidents, teams burn **15–30 minutes** on the same repetitive triage l
 
 > **n8n Workflow — Log Forwarding Pipeline**
 
-![n8n Workflow](./screenshots/n8n-workflow.png)
+<img width="1468" height="830" alt="image" src="https://github.com/user-attachments/assets/da326755-6506-4c06-b115-03b35126d315" />
 
 *Two-node n8n workflow: a webhook trigger that captures upstream alerts, forwarding them directly to BlameBug's ingest endpoint.*
 
