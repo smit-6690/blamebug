@@ -49,35 +49,6 @@ During incidents, teams burn **15-30 minutes** on the same repetitive triage loo
 
 ---
 
-## 📸 Screenshots
-
-> **Gradio Dashboard — Latest Incident Report**
-
-<img width="1468" height="699" alt="image" src="https://github.com/user-attachments/assets/07cf5ac2-89c3-40ee-b0b4-0dc3c34f8b0b" />
-
-
-*The main Gradio interface at `/` shows the latest parsed incident with severity badge, root-cause hypothesis, and remediation steps.*
-
-<br/>
-
-> **Standalone HTML Report**
-
-<img width="2936" height="1598" alt="image" src="https://github.com/user-attachments/assets/15a5e92c-427a-47cb-a333-1ae617e1e9b1" />
-
-<img width="1468" height="799" alt="image" src="https://github.com/user-attachments/assets/740b7ef1-193f-4ff1-915b-cfe3732d9a03" />
-
-
-*Each incident gets a fully styled, shareable HTML report accessible at `/api/reports/{report_id}`.*
-
-<br/>
-
-> **n8n Workflow — Log Forwarding Pipeline**
-
-<img width="1468" height="830" alt="image" src="https://github.com/user-attachments/assets/da326755-6506-4c06-b115-03b35126d315" />
-
-*Two-node n8n workflow: a webhook trigger that captures upstream alerts, forwarding them directly to BlameBug's ingest endpoint.*
-
----
 
 ## 🏗️ Architecture
 
@@ -202,7 +173,7 @@ Then open: `http://localhost:7860/api/reports/<report_id>`
 
 > **Gradio Dashboard — Latest Incident Report**
 
-![FaultLine Gradio UI](./1.png)
+![FaultLine Gradio UI](https://raw.githubusercontent.com/smit-6690/blamebug/main/1.png)
 
 *The main Gradio interface at `/` shows the latest parsed incident with severity badge, root-cause hypothesis, and remediation steps.*
 
@@ -210,7 +181,7 @@ Then open: `http://localhost:7860/api/reports/<report_id>`
 
 > **Standalone HTML Report**
 
-![FaultLine HTML Report](./2.png)
+![FaultLine HTML Report](https://raw.githubusercontent.com/smit-6690/blamebug/main/2.png)
 
 *Each incident gets a fully styled, shareable HTML report accessible at `/api/reports/{report_id}`.*
 
@@ -218,7 +189,7 @@ Then open: `http://localhost:7860/api/reports/<report_id>`
 
 > **n8n Workflow — Log Forwarding Pipeline**
 
-![n8n Workflow](./4.png)
+![n8n Workflow](https://raw.githubusercontent.com/smit-6690/blamebug/main/4.png)
 
 *Two-node n8n workflow: a webhook trigger that captures upstream alerts, forwarding them directly to FaultLine's ingest endpoint.*
 
